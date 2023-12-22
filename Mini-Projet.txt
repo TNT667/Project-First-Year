@@ -1,0 +1,397 @@
+#include <stdio.h>
+#include <stdlib.h>
+int type_m;
+int type_r;
+//Structure pour la date
+struct date{
+    int m;
+    int j;
+};
+
+// Structure pour représenter un rendez-vous
+struct RendezVous {
+    char nom[50];
+    struct date d ;
+    char raison[100];
+};
+
+// Tableau pour stocker les rendez-vous
+struct RendezVous rendez_vous[100];
+int nb_rendez_vous = 0;
+
+// Ajouter un rendez-vous
+void ajouter_rendez_vous() {
+    printf("Nom du client : ");
+    scanf("%s", rendez_vous[nb_rendez_vous].nom);
+    printf("Date du rendez-vous : ");
+    printf("entrer le mois:");
+    scanf("%d",&rendez_vous[nb_rendez_vous].d.m);
+    printf("entrer le jour:");
+    scanf("%d",&rendez_vous[nb_rendez_vous].d.j);
+
+    printf("Raison du rendez-vous : ");
+    scanf(" %[^\n]s", rendez_vous[nb_rendez_vous].raison);
+
+    nb_rendez_vous++;
+    printf("Le rendez-vous a été ajouté avec succès.\n");
+}
+
+void suppression() {
+    int type_s, ms, js, i, choix;
+
+    do {
+        printf("1: supprimer un par un\n");
+        printf("2: supprimer par date\n");
+        printf("3: tout supprimer\n");
+        printf("4: retour\n");
+        printf("Entrez le type de suppression : ");
+        scanf("%d", &type_s);
+    } while (type_s < 1 || type_s > 4);
+
+    switch (type_s) {
+        case 1:
+            for (i = 0; i < nb_rendez_vous; i++) {
+                // Déplacer les éléments suivants vers l'indice courant
+                rendez_vous[i] = rendez_vous[i + 1];
+            }
+            nb_rendez_vous--; // Réduire le nombre d'éléments
+            break;
+
+        case 2:
+            printf("Entrez la date:\n");
+            printf("Mois : ");
+            scanf("%d", &ms);
+            printf("Jour : ");
+            scanf("%d", &js);
+
+            for (i = 0; i < nb_rendez_vous; i++) {
+                if (rendez_vous[i].d.m == ms && rendez_vous[i].d.j == js) {
+                    // Déplacer les éléments suivants vers l'indice courant
+                    rendez_vous[i] = rendez_vous[i + 1];
+                    nb_rendez_vous--; // Réduire le nombre d'éléments
+                    printf("Rendez-vous supprimé avec succès.\n");
+                    break; // Sortir de la boucle dès que la première occurrence est supprimée
+                }
+            }
+
+            if (i == nb_rendez_vous) {
+                printf("Aucun rendez-vous trouvé à cette date.\n");
+            }
+            break;
+
+        case 3:
+            nb_rendez_vous = 0; // Réinitialiser le nombre d'éléments à zéro pour tout supprimer
+            printf("Tous les rendez-vous ont été supprimés.\n");
+            break;
+
+        case 4:
+            // Ne rien faire, simplement retourner
+            break;
+    }
+}
+// Modifier un rendez-vous par date
+void modifier_rendez_vous_par_date() {
+    int ms, js, i;
+    int found = 0;
+
+    printf("Entrez la date du rendez-vous à modifier :\n");
+    printf("Mois : ");
+    scanf("%d", &ms);
+    printf("Jour : ");
+    scanf("%d", &js);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (rendez_vous[i].d.m == ms && rendez_vous[i].d.j == js) {
+            printf("Modification du rendez-vous pour le %02d/%02d\n", ms, js);
+            printf("Nouveau nom du client : ");
+            scanf("%s", rendez_vous[i].nom);
+            printf("Nouvelle raison du rendez-vous : ");
+            scanf(" %[^\n]s", rendez_vous[i].raison);
+            printf("Le rendez-vous a été modifié avec succès.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé à cette date.\n");
+    }
+}
+// Modifier un rendez-vous par nom
+void modifier_rendez_vous_par_nom() {
+    char nom[50];
+    int i;
+    int found = 0;
+
+    printf("Entrez le nom du client du rendez-vous à modifier : ");
+    scanf("%s", nom);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (strcmp(rendez_vous[i].nom, nom) == 0) {
+            printf("Modification du rendez-vous pour le client %s\n", nom);
+            printf("Nouvelle date du rendez-vous :\n");
+            printf("Mois : ");
+            scanf("%d", &rendez_vous[i].d.m);
+            printf("Jour : ");
+            scanf("%d", &rendez_vous[i].d.j);
+            printf("Nouvelle raison du rendez-vous : ");
+            scanf(" %[^\n]s", rendez_vous[i].raison);
+            printf("Le rendez-vous a été modifié avec succès.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé pour le client %s.\n", nom);
+    }
+}
+// Modifier un rendez-vous par raison
+void modifier_rendez_vous_par_raison() {
+    char raison[50];
+    int i;
+    int found = 0;
+
+    printf("Entrez la raison du rendez-vous à modifier : ");
+    scanf("%s", raison);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (strcmp(rendez_vous[i].raison, raison) == 0) {
+            printf("Modification du rendez-vous pour la raison %s\n", raison);
+            printf("Nouveau nom du client :");
+            scanf("%s", rendez_vous[i].nom);
+            printf("Nouvelle date du rendez-vous :\n");
+            printf("Mois : ");
+            scanf("%d", &rendez_vous[i].d.m);
+            printf("Jour : ");
+            scanf("%d", &rendez_vous[i].d.j);
+
+            printf("Le rendez-vous a été modifié avec succès.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé pour le client %s.\n", raison);
+    }
+}
+
+// Rechercher un rendez-vous par nom du client
+void rechercher_rendez_vous_par_nom() {
+    char nom[50];
+    int i;
+    int found = 0;
+
+    printf("Entrez le nom du client pour rechercher un rendez-vous : ");
+    scanf("%s", nom);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (strcmp(rendez_vous[i].nom, nom) == 0) {
+            printf("Rendez-vous trouvé pour le client %s\n", nom);
+            printf("Date du rendez-vous : %02d/%02d\n", rendez_vous[i].d.m, rendez_vous[i].d.j);
+            printf("Raison du rendez-vous : %s\n", rendez_vous[i].raison);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé pour le client %s.\n", nom);
+    }
+}
+// Rechercher un rendez-vous par date
+void rechercher_rendez_vous_par_date() {
+    int ms, js, i;
+    int found = 0;
+
+    printf("Entrez la date du rendez-vous à rechercher :\n");
+    printf("Mois : ");
+    scanf("%d", &ms);
+    printf("Jour : ");
+    scanf("%d", &js);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (rendez_vous[i].d.m == ms && rendez_vous[i].d.j == js) {
+            printf("Rendez-vous trouvé pour le %02d/%02d\n", ms, js);
+            printf("Nom du client : %s\n", rendez_vous[i].nom);
+            printf("Raison du rendez-vous : %s\n", rendez_vous[i].raison);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé à cette date.\n");
+    }
+}
+// Rechercher un rendez-vous par raison
+void rechercher_rendez_vous_par_raison() {
+    char raison[100];
+    int i;
+    int found = 0;
+
+    printf("Entrez la raison du rendez-vous à rechercher : ");
+    scanf(" %[^\n]s", raison);
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if (strcmp(rendez_vous[i].raison, raison) == 0) {
+            printf("Rendez-vous trouvé pour la raison %s\n", raison);
+            printf("Nom du client : %s\n", rendez_vous[i].nom);
+            printf("Date du rendez-vous : %02d/%02d\n", rendez_vous[i].d.m, rendez_vous[i].d.j);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous trouvé pour la raison %s.\n", raison);
+    }
+}
+
+// Afficher tous les rendez-vous planifiés pour une période donnée
+void afficher_planning_rendez_vous() {
+    int mois_debut, jour_debut, mois_fin, jour_fin;
+    int i;
+    int found = 0;
+
+    printf("Entrez la période de planification des rendez-vous :\n");
+    printf("Mois de début : ");
+    scanf("%d", &mois_debut);
+    printf("Jour de début : ");
+    scanf("%d", &jour_debut);
+    printf("Mois de fin : ");
+    scanf("%d", &mois_fin);
+    printf("Jour de fin : ");
+    scanf("%d", &jour_fin);
+
+    printf("=== Planning des rendez-vous ===\n");
+
+    for (i = 0; i < nb_rendez_vous; i++) {
+        if ((rendez_vous[i].d.m > mois_debut && rendez_vous[i].d.m < mois_fin) ||
+            (rendez_vous[i].d.m == mois_debut && rendez_vous[i].d.j >= jour_debut) ||
+            (rendez_vous[i].d.m == mois_fin && rendez_vous[i].d.j <= jour_fin)) {
+            printf("Nom du client : %s\n", rendez_vous[i].nom);
+            printf("Date du rendez-vous : %02d/%02d\n", rendez_vous[i].d.m, rendez_vous[i].d.j);
+            printf("Raison du rendez-vous : %s\n", rendez_vous[i].raison);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("Aucun rendez-vous planifié pour la période spécifiée.\n");
+    }
+}
+
+int main() {
+
+
+
+
+
+    int choix;
+
+    while (1) {
+        printf("=== Gestion des rendez-vous ===\n");
+        printf("1. Gestion des rendez-vous \n");
+        printf("2. Quitter\n");
+
+        do {
+            printf("Choisissez une option : ");
+            scanf("%d", &choix);
+        } while (choix < 1 || choix > 2);
+
+        switch (choix) {
+            case 1:
+                while (1) {
+                    printf("1: Ajouter un rendez-vous\n");
+                    printf("2: Supprimer un rendez-vous\n");
+                    printf("3: Modifier un rendez-vous\n");
+                    printf("4: Rechercher un rendez-vous\n");
+                    printf("5: Planning de rendez-vous\n");
+                    printf("6: Retour au menu principal\n");
+                    printf("Entrez votre choix : ");
+                    scanf("%d", &choix);
+
+                    switch (choix) {
+                        case 1:
+                            ajouter_rendez_vous();
+                            break;
+                        case 2:
+                            suppression();
+                            break;
+                        case 3:
+                            printf("1: Modification par date\n");
+                            printf("2: Modification par nom\n");
+                            printf("3: Modification par raison\n");
+                            printf("4: retour\n");
+                            do{printf("Entrez le type de modification : ");
+                            scanf("%d", &type_m);}
+                            while(type_m < 1 || type_m > 4);
+                            switch(type_m){
+                            case 1:
+                                modifier_rendez_vous_par_date();
+                                break;
+
+                            case 2:
+                                modifier_rendez_vous_par_nom();
+                                break;
+                            case 3:
+                                modifier_rendez_vous_par_raison();
+                                break;
+
+                            case 4:
+                                break;
+                            }break;
+                            case 4 :
+                                printf("1: Recherche par date\n");
+                            printf("2: Recherche par nom\n");
+                            printf("3: Recherche par raison\n");
+                            printf("4: retour\n");
+                            do{printf("Entrez le type de recherche : ");
+                            scanf("%d", &type_r);}
+                            while(type_r < 1 || type_r > 4);
+                            switch(type_r){
+                            case 1:
+                                rechercher_rendez_vous_par_date();
+                                break;
+
+                            case 2:
+                                rechercher_rendez_vous_par_nom();
+                                break;
+                            case 3:
+                                rechercher_rendez_vous_par_raison();
+                                break;
+
+                            case 4:
+                                break;}break;
+                            case 5:
+
+                                afficher_planning_rendez_vous();
+                        case 6:
+
+                      break;
+                        default:
+                            printf("Option invalide.\n");
+                            break;
+                    }
+
+                    if (choix == 3) {
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                printf("Au revoir !\n");
+                return 0;
+            default:
+                printf("Option invalide.\n");
+                break;
+        }
+    }
+
+
+
+
+    return 0;
+}
